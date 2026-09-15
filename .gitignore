@@ -1,0 +1,55 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing & E2E
+/coverage
+/test-results
+/playwright-report
+/blob-report
+
+# Next.js build output
+/.next/
+/out/
+
+# Build caches & metadata
+build
+dist
+*.tsbuildinfo
+
+# User requested exclusions
+.agents
+agents
+Material UXUI WEB
+/Material UXUI WEB/
+
+# Environment files
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+*.pem
+
+# Editor directories
+.idea
+.vscode
+*.sw?
+
+# Vercel & Turbo
+.vercel
+.turbo

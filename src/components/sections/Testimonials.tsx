@@ -109,7 +109,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
   return (
     <section
       id="testimonios"
-      className="py-16 md:py-24 bg-cream/70 relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-cream-soft relative overflow-hidden"
       aria-roledescription="carousel"
       aria-label="Opiniones de clientes"
     >

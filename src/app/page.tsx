@@ -15,35 +15,63 @@ import { SectionDivider } from "@/components/common/SectionDivider";
 export default function HomePage() {
   return (
     <>
-      {/* Accessible skip to main content */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-mustard focus:text-white focus:rounded-button focus:shadow-warm text-sm font-medium"
-      >
-        Saltar al contenido principal
-      </a>
-
       {/* Sticky Header Navigation */}
       <Navbar />
 
       {/* Main Semantic Content */}
       <main id="main-content" className="flex flex-col">
         <Hero />
-        <SectionDivider position="bottom" colorClass="text-cream-soft" className="-mt-10 sm:-mt-14 relative z-20" />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-cream-soft"
+          className="-mt-10 sm:-mt-14 relative z-10"
+        />
         <AboutUs />
-        <SectionDivider position="bottom" colorClass="text-cream" className="bg-cream-soft" />
         <WhatWeOffer />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-white"
+          className="bg-cream-soft"
+        />
         <Menu />
-        <SectionDivider position="bottom" colorClass="text-[#FAF2E5]" className="bg-cream" />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-cream-soft"
+          className="bg-white"
+          flipX
+        />
         <Experience />
-        <SectionDivider position="bottom" colorClass="text-cream" className="bg-[#FAF2E5]" flipX />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-white"
+          className="bg-cream-soft"
+        />
         <Ingredients />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-cream-soft"
+          className="bg-white"
+          flipX
+        />
         <Testimonials />
-        <SectionDivider position="bottom" colorClass="text-white" className="bg-cream/70" />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-white"
+          className="bg-cream-soft"
+        />
         <FAQ />
-        <SectionDivider position="bottom" colorClass="text-cream-soft" className="bg-white" flipX />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-cream-soft"
+          className="bg-white"
+          flipX
+        />
         <ContactReservation />
-        <SectionDivider position="bottom" colorClass="text-coffee-dark" className="bg-cream-soft" />
+        <SectionDivider
+          position="bottom"
+          colorClass="text-coffee-dark"
+          className="bg-cream-soft"
+        />
       </main>
 
       {/* Site Footer */}

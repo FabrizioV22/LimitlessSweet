@@ -152,4 +152,56 @@ export async function runRoadmapModernizationTests(collector: TestCollector): Pr
       assert.ok(html.includes("Café y bebidas"), "WhatWeOffer must render 'Café y bebidas'");
     }
   );
+
+  // 10. SideVine Floral Lateral Border (Plan Vine Lateral 1.0)
+  await collector.runTest(
+    "RM-4.1: SideVine renders scroll-driven decorative vine with yellow blooms on left and right",
+    () => {
+      const { SideVine } = require("../src/components/common/SideVine");
+      const leftHtml = renderComponent(React.createElement(SideVine, { side: "left" }));
+      assert.ok(leftHtml.includes("fixed top-0"), "SideVine must be fixed top-0");
+      assert.ok(leftHtml.includes("left-2") || leftHtml.includes("left-4"), "Left vine must align to left edge");
+      assert.ok(leftHtml.includes("<svg"), "SideVine must render SVG element");
+      assert.ok(leftHtml.includes("flower-grad-left"), "SideVine must render yellow flower petal gradient");
+
+      const rightHtml = renderComponent(React.createElement(SideVine, { side: "right" }));
+      assert.ok(rightHtml.includes("scaleX(-1)"), "Right vine must be mirrored with scaleX(-1)");
+    }
+  );
+
+  // 11. PaperTexture (Plan Vine Lateral 2.3)
+  await collector.runTest(
+    "RM-4.2: PaperTexture renders subtle fractal noise overlay filter",
+    () => {
+      const { PaperTexture } = require("../src/components/common/PaperTexture");
+      const html = renderComponent(React.createElement(PaperTexture));
+      assert.ok(html.includes("feTurbulence"), "PaperTexture must define feTurbulence filter");
+      assert.ok(html.includes("fractalNoise"), "PaperTexture must use fractalNoise type");
+      assert.ok(html.includes("mix-blend-multiply"), "PaperTexture must use mix-blend-multiply");
+    }
+  );
+
+  // 12. Continuous Section Flow & Full-Bleed Layout
+  await collector.runTest(
+    "RM-4.3: Continuous harmonious section flow without harsh bars and Experience full-bleed layout",
+    () => {
+      const { Menu } = require("../src/components/sections/Menu");
+      const { FAQ } = require("../src/components/sections/FAQ");
+      const { Experience } = require("../src/components/sections/Experience");
+
+      const menuHtml = renderComponent(React.createElement(Menu));
+      assert.ok(menuHtml.includes('id="menu"'), "Menu section must define id='menu'");
+      assert.ok(!menuHtml.includes("h-[3px]"), "Menu must not have harsh 3px separator line");
+
+      const faqHtml = renderComponent(React.createElement(FAQ));
+      assert.ok(faqHtml.includes('id="faq"'), "FAQ section must define id='faq'");
+      assert.ok(!faqHtml.includes("h-[3px]"), "FAQ must not have harsh 3px separator line");
+
+      const expHtml = renderComponent(React.createElement(Experience));
+      assert.ok(
+        expHtml.includes("max-w-[1600px]"),
+        "Experience section must break 7xl boundary with full-bleed max-w-[1600px] container"
+      );
+    }
+  );
 }

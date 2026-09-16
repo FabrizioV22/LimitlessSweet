@@ -25,7 +25,7 @@ export const Menu: React.FC<MenuProps> = ({ products = MOCK_PRODUCTS }) => {
   return (
     <section
       id="menu"
-      className="py-16 sm:py-20 lg:py-24 bg-cream scroll-mt-20"
+      className="py-20 sm:py-24 lg:py-28 bg-white scroll-mt-20 relative"
       aria-label="Nuestro menú"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -7,7 +7,7 @@ export interface SectionDividerProps {
    */
   position?: "top" | "bottom";
   /**
-   * Tailwind text color class representing the fill color (e.g., 'text-cream-soft', 'text-white', 'text-cream', 'text-coffee-dark')
+   * Tailwind text color class representing the fill color (e.g., 'text-cream-soft', 'text-white', 'text-coffee-dark')
    */
   colorClass?: string;
   /**
@@ -22,8 +22,9 @@ export interface SectionDividerProps {
 
 /**
  * SectionDivider
- * Organic wave/curve SVG divider replacing harsh straight boundaries between sections.
- * Uses fill="currentColor" mapped to the colorClass prop.
+ * Organic sweeping wave SVG divider connecting sections seamlessly.
+ * Uses consistent prominent wave dimensions (h-[28px] sm:h-[44px] lg:h-[60px])
+ * across all sections for a balanced, harmonious rhythm throughout the site.
  */
 export const SectionDivider: React.FC<SectionDividerProps> = ({
   position = "bottom",

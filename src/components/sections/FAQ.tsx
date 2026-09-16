@@ -25,9 +25,10 @@ export const FAQ: React.FC<FAQProps> = ({ faqs = MOCK_FAQS }) => {
   return (
     <section
       id="faq"
-      className="py-16 md:py-24 bg-white relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-white relative overflow-hidden"
       aria-label="Preguntas frecuentes"
     >
+
       {/* Decorative background blurs */}
       <div
         className="absolute top-1/3 -right-24 w-96 h-96 bg-cream-soft rounded-full blur-3xl pointer-events-none -z-10"

@@ -14,7 +14,7 @@ export const Experience: React.FC<ExperienceProps> = ({
   return (
     <section
       id="ambiente"
-      className="py-16 sm:py-20 lg:py-24 bg-cream-soft/70 scroll-mt-20 border-t border-[#F3EADA]/60"
+      className="py-20 sm:py-24 lg:py-28 bg-cream-soft scroll-mt-20 overflow-hidden"
       aria-label="Actividades y ambiente"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,8 +23,11 @@ export const Experience: React.FC<ExperienceProps> = ({
           title="Actividades y ambiente"
           subtitle="Más que una cafetería: un lugar acogedor donde pasar el tiempo sin prisas."
         />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      {/* Full-bleed visual activity cards breaking container boundaries */}
+      <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-12 mt-10 sm:mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-[1600px] mx-auto">
           {activities.map((activity) => (
             <ActivityCard key={activity.id} activity={activity} />
           ))}

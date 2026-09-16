@@ -26,7 +26,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ className }) => {
       id="nosotros"
       aria-label="Sobre nosotros y quiénes somos"
       className={cn(
-        "relative py-16 sm:py-20 lg:py-28 bg-cream-soft border-b border-coffee/5 overflow-hidden",
+        "relative py-16 sm:py-20 lg:py-28 bg-cream-soft overflow-hidden",
         className
       )}
     >

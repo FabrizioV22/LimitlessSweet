@@ -28,7 +28,7 @@ const PILLARS: Pillar[] = [
     title: "Sin gluten",
     description:
       "100% libre de trazas en un obrador controlado con protocolos estrictos para personas celíacas.",
-    badge: "Estándar < 5 ppm",
+    badge: "< 5 ppm",
     icon: Wheat,
     iconBg: "bg-yellow-light/70",
     iconColor: "text-coffee",
@@ -39,7 +39,7 @@ const PILLARS: Pillar[] = [
     title: "Vegano",
     description:
       "Repostería vegetal creativa elaborada sin ningún derivado de origen animal, llena de sabor.",
-    badge: "100% Plant-based",
+    badge: "Plant-based",
     icon: Leaf,
     iconBg: "bg-sage-light/80",
     iconColor: "text-sage-dark",
@@ -50,7 +50,7 @@ const PILLARS: Pillar[] = [
     title: "Sin lácteos",
     description:
       "Bebidas y cremas vegetales de avena, coco y arroz certificadas, libres de caseína y lactosa.",
-    badge: "0% Lactosa & Caseína",
+    badge: "0% Lactosa",
     icon: Droplets,
     iconBg: "bg-[#F8EFEA]",
     iconColor: "text-[#754E3C]",
@@ -61,7 +61,7 @@ const PILLARS: Pillar[] = [
     title: "Café y bebidas",
     description:
       "Café de especialidad de origen orgánico, tueste artesanal e infusiones botánicas aromatizadas.",
-    badge: "Grano seleccionado",
+    badge: "Grano selecto",
     icon: Coffee,
     iconBg: "bg-cream-soft",
     iconColor: "text-mustard",
@@ -83,16 +83,10 @@ export const WhatWeOffer: React.FC<WhatWeOfferProps> = ({ className }) => {
       id="ofrecemos"
       aria-label="Nuestras especialidades"
       className={cn(
-        "relative py-16 sm:py-20 lg:py-28 bg-cream border-b border-coffee/5 overflow-hidden",
+        "relative py-16 sm:py-20 lg:py-28 bg-cream-soft overflow-hidden",
         className
       )}
     >
-      {/* Soft background ambient accent */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-yellow-light/30 blur-3xl"
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
         <SectionTitle
@@ -126,7 +120,7 @@ export const WhatWeOffer: React.FC<WhatWeOfferProps> = ({ className }) => {
               >
                 <div>
                   {/* Circular Icon Container with subtle idle float animation */}
-                  <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center justify-between gap-3 mb-5">
                     <motion.div
                       aria-hidden="true"
                       animate={
@@ -144,15 +138,15 @@ export const WhatWeOffer: React.FC<WhatWeOfferProps> = ({ className }) => {
                         delay: index * 0.45,
                       }}
                       className={cn(
-                        "w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110",
+                        "w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 shrink-0",
                         pillar.iconBg,
                         pillar.iconColor
                       )}
                     >
-                      <IconComponent className="w-7 h-7 sm:w-8 sm:h-8" />
+                      <IconComponent className="w-6 h-6 sm:w-7 sm:h-7" />
                     </motion.div>
 
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-subtle bg-cream-soft px-2.5 py-1 rounded-full border border-coffee/10">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-subtle bg-cream-soft px-2.5 py-1 rounded-full border border-coffee/10 whitespace-nowrap shrink-0">
                       {pillar.badge}
                     </span>
                   </div>

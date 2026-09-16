@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronDown, ShieldCheck, Check, Sparkles, Award } from "lucide-react";
 import { IngredientEntry } from "@/types";
 import { MOCK_INGREDIENTS } from "@/data/ingredients";
@@ -54,38 +54,33 @@ export const Ingredients: React.FC<IngredientsProps> = ({
 }) => {
   const [openItemId, setOpenItemId] = useState<string | null>("ing-brownie");
   const [spotlightItemId, setSpotlightItemId] = useState<string>("ing-brownie");
-  const [hasAutoOpened, setHasAutoOpened] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const shouldReduceMotion = useReducedMotion();
 
   const toggleItem = (id: string) => {
     setSpotlightItemId(id);
     setOpenItemId((prev) => (prev === id ? null : id));
   };
 
-  // Scrollspy to update sticky editorial spotlight image as user scrolls
+  // Rotación suave y automática del tablero destacado con tiempo suficiente (8 segundos)
+  // Se pausa automáticamente al interactuar o pasar el cursor para leer tranquilamente.
+  // NO depende del scroll para evitar cambios involuntarios al desplazarse.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const intersecting = entries.find((e) => e.isIntersecting);
-        if (intersecting) {
-          const id = intersecting.target.getAttribute("data-ingredient-id");
-          if (id) {
-            setSpotlightItemId(id);
-          }
-        }
-      },
-      {
-        rootMargin: "-20% 0px -40% 0px",
-        threshold: 0.2,
-      }
-    );
+    if (shouldReduceMotion || isPaused || ingredients.length <= 1) return;
 
-    Object.values(cardRefs.current).forEach((el) => {
-      if (el) observer.observe(el);
-    });
+    const interval = setInterval(() => {
+      setSpotlightItemId((currentId) => {
+        const currentIndex = ingredients.findIndex((item) => item.id === currentId);
+        const nextIndex = (currentIndex + 1) % ingredients.length;
+        const nextId = ingredients[nextIndex]?.id || ingredients[0].id;
+        setOpenItemId(nextId);
+        return nextId;
+      });
+    }, 8000);
 
-    return () => observer.disconnect();
-  }, [ingredients]);
+    return () => clearInterval(interval);
+  }, [isPaused, shouldReduceMotion, ingredients]);
 
   const activeVisual =
     INGREDIENT_VISUALS[spotlightItemId] || INGREDIENT_VISUALS["ing-brownie"];
@@ -95,15 +90,13 @@ export const Ingredients: React.FC<IngredientsProps> = ({
   return (
     <section
       id="insumos"
-      className="py-16 sm:py-20 lg:py-28 bg-cream scroll-mt-20 relative overflow-hidden"
+      className="py-20 sm:py-24 lg:py-28 bg-white scroll-mt-20 relative overflow-hidden"
       aria-label="Lista de insumos"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={() => setIsPaused(false)}
     >
-      {/* Background ambient accent */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-yellow-light/20 blur-3xl"
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle
           eyebrow="Transparencia"
@@ -181,13 +174,6 @@ export const Ingredients: React.FC<IngredientsProps> = ({
                     cardRefs.current[item.id] = el;
                   }}
                   data-ingredient-id={item.id}
-                  onViewportEnter={() => {
-                    // Auto-expand first item once when section enters viewport
-                    if (!hasAutoOpened && idx === 0) {
-                      setOpenItemId(item.id);
-                      setHasAutoOpened(true);
-                    }
-                  }}
                   className={cn(
                     "border rounded-card bg-white shadow-warm overflow-hidden transition-all duration-300",
                     isSpotlight

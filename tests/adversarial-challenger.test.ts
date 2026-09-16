@@ -10,6 +10,7 @@ import { MenuFilter, FILTER_OPTIONS, FilterOption } from "../src/components/sect
 import { ContactReservation } from "../src/components/sections/ContactReservation";
 import { MOCK_PRODUCTS } from "../src/data/products";
 import { Product, AllergenTag } from "../src/types";
+import { formatPrice } from "../src/lib/utils";
 
 export async function runAdversarialChallengerSuite(): Promise<{ total: number; passed: number; failed: number }> {
   const collector = new TestCollector();
@@ -153,7 +154,7 @@ export async function runAdversarialChallengerSuite(): Promise<{ total: number; 
     // Yesterday
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
     const resPast = authoritativeReservationSchema.safeParse({ ...baseValid, date: yesterdayStr });
     assert.ok(!resPast.success, `Yesterday (${yesterdayStr}) must be rejected`);
 
@@ -395,15 +396,14 @@ export async function runAdversarialChallengerSuite(): Promise<{ total: number; 
     assert.ok(htmlTheme.includes("Agregar al pedido"), "Theme of month product is available to order");
   });
 
-  await collector.runTest("CH-3.4: Currency formatting in ProductCard adheres to authoritative COP $X.XXX", () => {
+  await collector.runTest("CH-3.4: Currency formatting in ProductCard adheres to authoritative Soles (S/)", () => {
     // Format test for all 6 mock products
     for (const p of MOCK_PRODUCTS) {
       const html = renderComponent(React.createElement(ProductCard, { product: p }));
-      // 6500 -> $6.500, 8900 -> $8.900, etc.
-      const expectedFormatted = `$${(p.price / 1000).toFixed(3).replace(".", ".")}`;
+      const expectedFormatted = formatPrice(p.price);
       assert.ok(
-        html.includes(expectedFormatted) || html.includes(`$${p.price.toLocaleString("es-CO")}`),
-        `Product '${p.name}' price (${p.price}) must be rendered formatted`
+        html.includes(expectedFormatted),
+        `Product '${p.name}' price (${p.price}) must be rendered formatted as ${expectedFormatted}`
       );
     }
   });
@@ -509,9 +509,9 @@ export async function runAdversarialChallengerSuite(): Promise<{ total: number; 
 
   await collector.runTest("CH-6.2: formatPrice edge cases: zero and large values formatted gracefully", () => {
     const { formatPrice } = require("../src/lib/utils");
-    assert.strictEqual(formatPrice(0), "$0", "formatPrice(0) should return '$0'");
-    assert.strictEqual(formatPrice(1000), "$1.000", "formatPrice(1000) should return '$1.000'");
-    assert.strictEqual(formatPrice(15500), "$15.500", "formatPrice(15500) should return '$15.500'");
+    assert.strictEqual(formatPrice(0), "S/ 0.00", "formatPrice(0) should return 'S/ 0.00'");
+    assert.strictEqual(formatPrice(10), "S/ 10.00", "formatPrice(10) should return 'S/ 10.00'");
+    assert.strictEqual(formatPrice(15.5), "S/ 15.50", "formatPrice(15.5) should return 'S/ 15.50'");
   });
 
   await collector.runTest("CH-6.3: ProductCard resilience: empty tags array renders without crashing", () => {

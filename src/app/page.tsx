@@ -10,6 +10,7 @@ import { Ingredients } from "@/components/sections/Ingredients";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
 import { ContactReservation } from "@/components/sections/ContactReservation";
+import { SectionDivider } from "@/components/common/SectionDivider";
 
 export default function HomePage() {
   return (
@@ -28,14 +29,21 @@ export default function HomePage() {
       {/* Main Semantic Content */}
       <main id="main-content" className="flex flex-col">
         <Hero />
+        <SectionDivider position="bottom" colorClass="text-cream-soft" className="-mt-10 sm:-mt-14 relative z-20" />
         <AboutUs />
+        <SectionDivider position="bottom" colorClass="text-cream" className="bg-cream-soft" />
         <WhatWeOffer />
         <Menu />
+        <SectionDivider position="bottom" colorClass="text-[#FAF2E5]" className="bg-cream" />
         <Experience />
+        <SectionDivider position="bottom" colorClass="text-cream" className="bg-[#FAF2E5]" flipX />
         <Ingredients />
         <Testimonials />
+        <SectionDivider position="bottom" colorClass="text-white" className="bg-cream/70" />
         <FAQ />
+        <SectionDivider position="bottom" colorClass="text-cream-soft" className="bg-white" flipX />
         <ContactReservation />
+        <SectionDivider position="bottom" colorClass="text-coffee-dark" className="bg-cream-soft" />
       </main>
 
       {/* Site Footer */}

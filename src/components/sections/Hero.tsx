@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
+import { FloatingPetals } from "@/components/common/FloatingPetals";
+import { MagneticWrapper } from "@/components/common/MagneticWrapper";
 
 export interface HeroProps {
   themeBadge?: string;
@@ -22,11 +24,20 @@ export const Hero: React.FC<HeroProps> = ({
   title = "Postres que florecen para ti, sin restricciones",
   subtitle = "Un espacio seguro donde cada bocado está pensado para quienes viven con alergias e intolerancias.",
   ctaMenuHref = "#menu",
-  ctaReserveHref,
+  ctaReserveHref = "#reserva",
   backgroundImage = "/images/imagen_fondo.jpg",
   className,
 }) => {
+  const sectionRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
+
+  // Subtle parallax effect on scroll
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.35]);
 
   // Animation variants conditioned on reduced motion preference
   const containerVariants = shouldReduceMotion
@@ -37,6 +48,7 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <section
+      ref={sectionRef}
       id="inicio"
       aria-label="Presentación Limitless Sweet"
       className={cn(
@@ -44,8 +56,11 @@ export const Hero: React.FC<HeroProps> = ({
         className
       )}
     >
-      {/* Background Image Container */}
-      <div className="absolute inset-0 -z-20 overflow-hidden">
+      {/* Background Image Container with subtle parallax */}
+      <motion.div
+        style={shouldReduceMotion ? undefined : { y: bgY, opacity: bgOpacity }}
+        className="absolute inset-0 -z-20 overflow-hidden"
+      >
         <Image
           src={backgroundImage}
           alt="Ambiente cálido de cafetería temática Limitless Sweet"
@@ -53,11 +68,14 @@ export const Hero: React.FC<HeroProps> = ({
           priority
           sizes="100vw"
           className={cn(
-            "object-cover object-center transform-gpu",
+            "object-cover object-center transform-gpu scale-105",
             !shouldReduceMotion && "animate-ken-burns"
           )}
         />
-      </div>
+      </motion.div>
+
+      {/* Floating Seasonal Theme Petals (Flores Amarillas) */}
+      <FloatingPetals />
 
       {/* Dark warm overlay matching reference fondo.png for optimal legibility */}
       <div
@@ -109,21 +127,25 @@ export const Hero: React.FC<HeroProps> = ({
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
           >
-            <a
-              href={ctaMenuHref}
-              className="inline-flex items-center justify-center px-8 sm:px-10 py-3.5 sm:py-4 rounded-button bg-mustard hover:bg-mustard-hover active:bg-mustard-dark text-white font-semibold text-base sm:text-lg shadow-warm-lg hover:shadow-warm-hover active:scale-95 transition-all duration-200 min-h-[48px]"
-            >
-              <span>Ver menú</span>
-            </a>
+            <MagneticWrapper strength={0.25} className="w-full sm:w-auto flex justify-center">
+              <a
+                href={ctaMenuHref}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-3.5 sm:py-4 rounded-button bg-mustard hover:bg-mustard-hover active:bg-mustard-dark text-white font-semibold text-base sm:text-lg shadow-warm-lg hover:shadow-warm-hover active:scale-95 transition-all duration-200 min-h-[48px]"
+              >
+                <span>Ver menú</span>
+              </a>
+            </MagneticWrapper>
 
             {ctaReserveHref && (
-              <a
-                href={ctaReserveHref}
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 rounded-button bg-white/20 hover:bg-white/30 active:bg-white/40 text-white backdrop-blur-md font-semibold text-base sm:text-lg border border-white/30 shadow-warm transition-all duration-200 min-h-[48px]"
-              >
-                <Calendar aria-hidden="true" className="w-5 h-5 text-yellow-light" />
-                <span>Reservar mesa</span>
-              </a>
+              <MagneticWrapper strength={0.25} className="w-full sm:w-auto flex justify-center">
+                <a
+                  href={ctaReserveHref}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 rounded-button bg-white/20 hover:bg-white/30 active:bg-white/40 text-white backdrop-blur-md font-semibold text-base sm:text-lg border border-white/30 shadow-warm transition-all duration-200 min-h-[48px]"
+                >
+                  <Calendar aria-hidden="true" className="w-5 h-5 text-yellow-light" />
+                  <span>Reservar mesa</span>
+                </a>
+              </MagneticWrapper>
             )}
           </motion.div>
         </motion.div>

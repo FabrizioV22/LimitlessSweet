@@ -60,3 +60,57 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #B06E30;
 }
+
+/* Floating Seasonal Theme Petals (Flores Amarillas) */
+@keyframes float-petal-1 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-55vh) translateX(25px) rotate(110deg);
+  }
+  88% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-115vh) translateX(-15px) rotate(220deg);
+    opacity: 0;
+  }
+}
+
+@keyframes float-petal-2 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-55vh) translateX(-30px) rotate(-120deg);
+  }
+  88% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-115vh) translateX(20px) rotate(-240deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-petal-1 {
+  animation-name: float-petal-1;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.animate-float-petal-2 {
+  animation-name: float-petal-2;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+

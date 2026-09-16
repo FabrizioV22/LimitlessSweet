@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { Heart, ShoppingBag, Check } from "lucide-react";
 import { Product } from "@/types";
 import { AllergenBadge } from "./AllergenBadge";
@@ -19,6 +19,34 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const cardRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const [canTilt, setCanTilt] = useState(false);
+
+  useEffect(() => {
+    const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+    setCanTilt(hasFinePointer && !shouldReduceMotion);
+  }, [shouldReduceMotion]);
+
+  const rawRotateX = useMotionValue(0);
+  const rawRotateY = useMotionValue(0);
+
+  const rotateX = useSpring(rawRotateX, { stiffness: 300, damping: 25 });
+  const rotateY = useSpring(rawRotateY, { stiffness: 300, damping: 25 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!canTilt || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    rawRotateY.set(px * 7); // Maximum 7 degrees
+    rawRotateX.set(-py * 7);
+  };
+
+  const handleMouseLeave = () => {
+    rawRotateX.set(0);
+    rawRotateY.set(0);
+  };
 
   const isSoldOut = product.status === "sold-out-today";
 
@@ -40,13 +68,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <motion.article
+      ref={cardRef}
       layout
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.25 }}
-      whileHover={{ y: -4 }}
-      className="group relative flex flex-col bg-white rounded-card shadow-warm hover:shadow-warm-hover transition-all duration-300 overflow-hidden border border-[#F3EADA]/70"
+      whileHover={canTilt ? undefined : { y: -4 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={canTilt ? { rotateX, rotateY, transformPerspective: 800 } : undefined}
+      className="group relative flex flex-col bg-white rounded-card shadow-warm hover:shadow-warm-hover transition-all duration-300 overflow-hidden border border-[#F3EADA]/70 will-change-transform"
     >
       {/* Product Image Container */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#FBF3E4]">
@@ -83,7 +115,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Badge "DEL MES" */}
         {product.isThemeOfMonth && (
           <div className="absolute bottom-3 left-3 z-10">
-            <span className="inline-flex items-center gap-1 rounded-full bg-yellow px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ink shadow-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-yellow px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ink shadow-sm animate-gentle-pulse">
               DEL MES
             </span>
           </div>

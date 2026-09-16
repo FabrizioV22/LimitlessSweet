@@ -171,10 +171,10 @@ export async function runTier1Tests(collector: TestCollector): Promise<void> {
   await collector.runTest(
     "T1.6: ProductCard displays prices in authoritative $X.XXX format in mustard font",
     () => {
-      // Test formatPrice utility
-      assert.strictEqual(formatPrice(6500), "$6.500", "6500 must format as $6.500");
-      assert.strictEqual(formatPrice(8900), "$8.900", "8900 must format as $8.900");
-      assert.strictEqual(formatPrice(9500), "$9.500", "9500 must format as $9.500");
+      // Test formatPrice utility (Peruvian Soles)
+      assert.strictEqual(formatPrice(16), "S/ 16.00", "16 must format as S/ 16.00");
+      assert.strictEqual(formatPrice(22), "S/ 22.00", "22 must format as S/ 22.00");
+      assert.strictEqual(formatPrice(11.5), "S/ 11.50", "11.5 must format as S/ 11.50");
 
       const product = MOCK_PRODUCTS[0]; // Brownie floral
       const html = renderComponent(React.createElement(ProductCard, { product }));

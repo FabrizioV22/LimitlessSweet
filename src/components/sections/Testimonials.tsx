@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 import { Testimonial } from "@/types";
 import { MOCK_TESTIMONIALS } from "@/data/testimonials";
@@ -19,7 +19,9 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
   const items = testimonials && testimonials.length > 0 ? testimonials : MOCK_TESTIMONIALS;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const prevSlide = useCallback(() => {
     setDirection(-1);
@@ -30,6 +32,17 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
     setDirection(1);
     setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
   }, [items.length]);
+
+  // Auto-play interval (6.5s) paused on hover, focus, or when reduced motion is preferred
+  useEffect(() => {
+    if (shouldReduceMotion || isPaused || items.length <= 1) return;
+
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 6500);
+
+    return () => clearInterval(timer);
+  }, [isPaused, shouldReduceMotion, items.length, nextSlide]);
 
   const goToSlide = useCallback(
     (index: number) => {
@@ -118,11 +131,15 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
           align="center"
         />
 
-        {/* Carousel Container */}
+        {/* Carousel Container with hover & focus auto-play pause */}
         <div
           ref={containerRef}
           tabIndex={0}
           onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
           className="relative max-w-3xl mx-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-mustard rounded-card"
           aria-live="polite"
         >

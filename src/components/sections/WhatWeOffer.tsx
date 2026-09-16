@@ -110,7 +110,7 @@ export const WhatWeOffer: React.FC<WhatWeOfferProps> = ({ className }) => {
           viewport={{ once: true, margin: "-60px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 items-stretch"
         >
-          {PILLARS.map((pillar) => {
+          {PILLARS.map((pillar, index) => {
             const IconComponent = pillar.icon;
 
             return (
@@ -125,10 +125,24 @@ export const WhatWeOffer: React.FC<WhatWeOfferProps> = ({ className }) => {
                 )}
               >
                 <div>
-                  {/* Circular Icon Container */}
+                  {/* Circular Icon Container with subtle idle float animation */}
                   <div className="flex items-center justify-between mb-5">
-                    <div
+                    <motion.div
                       aria-hidden="true"
+                      animate={
+                        shouldReduceMotion
+                          ? undefined
+                          : {
+                              y: [0, -3, 0],
+                            }
+                      }
+                      transition={{
+                        duration: 3.5,
+                        repeat: Infinity,
+                        repeatType: "mirror",
+                        ease: "easeInOut",
+                        delay: index * 0.45,
+                      }}
                       className={cn(
                         "w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110",
                         pillar.iconBg,
@@ -136,7 +150,7 @@ export const WhatWeOffer: React.FC<WhatWeOfferProps> = ({ className }) => {
                       )}
                     >
                       <IconComponent className="w-7 h-7 sm:w-8 sm:h-8" />
-                    </div>
+                    </motion.div>
 
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-subtle bg-cream-soft px-2.5 py-1 rounded-full border border-coffee/10">
                       {pillar.badge}

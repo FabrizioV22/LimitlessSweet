@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ScrollProgress } from "@/components/common/ScrollProgress";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -49,6 +50,7 @@ export default function RootLayout({
           "min-h-screen bg-cream text-ink font-body antialiased selection:bg-yellow-light selection:text-ink"
         )}
       >
+        <ScrollProgress />
         {children}
       </body>
     </html>

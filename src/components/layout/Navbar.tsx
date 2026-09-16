@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { MagneticWrapper } from "@/components/common/MagneticWrapper";
 
 interface NavLink {
   label: string;
@@ -22,19 +23,47 @@ const NAV_LINKS: NavLink[] = [
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      setIsScrolled(window.scrollY > 40);
+      if (window.scrollY < 120) {
+        setActiveSection("");
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // IntersectionObserver to detect currently active section
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          // Select entry with highest intersection ratio or nearest
+          const current = visibleEntries.reduce((prev, curr) =>
+            curr.intersectionRatio > prev.intersectionRatio ? curr : prev
+          );
+          setActiveSection(`#${current.target.id}`);
+        }
+      },
+      {
+        rootMargin: "-25% 0px -40% 0px",
+        threshold: [0, 0.2, 0.5, 0.8],
+      }
+    );
+
+    const sectionElements = NAV_LINKS.map((l) =>
+      document.querySelector(l.href)
+    ).filter(Boolean) as HTMLElement[];
+
+    sectionElements.forEach((s) => observer.observe(s));
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -60,25 +89,40 @@ export const Navbar: React.FC = () => {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Navegación principal">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-ink hover:text-mustard transition-colors duration-200"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isActive = activeSection === link.href;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                className={`relative py-1 text-sm font-medium transition-colors duration-200 ${
+                  isActive ? "text-mustard font-semibold" : "text-ink hover:text-mustard"
+                }`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {link.label}
+                {isActive && (
+                  <motion.span
+                    layoutId="activeNavUnderline"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-mustard rounded-full"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </a>
+            );
+          })}
         </nav>
 
         {/* CTA Button */}
         <div className="hidden md:flex items-center gap-4">
-          <a
-            href="#menu"
-            className="inline-flex items-center justify-center px-5 py-2.5 rounded-button bg-mustard hover:bg-mustard-hover active:bg-mustard-dark text-white font-medium text-sm transition-all duration-200 shadow-sm hover:shadow active:scale-95"
-          >
-            Ver menú
-          </a>
+          <MagneticWrapper strength={0.25}>
+            <a
+              href="#menu"
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-button bg-mustard hover:bg-mustard-hover active:bg-mustard-dark text-white font-medium text-sm transition-all duration-200 shadow-sm hover:shadow active:scale-95"
+            >
+              Ver menú
+            </a>
+          </MagneticWrapper>
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -109,17 +153,25 @@ export const Navbar: React.FC = () => {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="md:hidden overflow-hidden bg-white/98 border-b border-neutral-200 shadow-lg"
           >
-            <div className="px-5 pt-3 pb-6 space-y-3">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={closeMobileMenu}
-                  className="block py-2 text-base font-medium text-ink hover:text-mustard transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+            <div className="px-5 pt-3 pb-6 space-y-2">
+              {NAV_LINKS.map((link) => {
+                const isActive = activeSection === link.href;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={closeMobileMenu}
+                    className={`block py-2.5 px-3 rounded-lg text-base font-medium transition-colors ${
+                      isActive
+                        ? "text-mustard font-semibold bg-yellow-light/20"
+                        : "text-ink hover:text-mustard hover:bg-cream-soft"
+                    }`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               <div className="pt-3">
                 <a
                   href="#menu"

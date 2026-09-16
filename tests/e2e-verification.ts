@@ -12,13 +12,14 @@ import { runTier1Tests } from "./tier1-feature-coverage.test";
 import { runTier2Tests } from "./tier2-boundary-corner.test";
 import { runTier3Tests } from "./tier3-cross-feature.test";
 import { runTier4Tests } from "./tier4-user-scenarios.test";
+import { runRoadmapModernizationTests } from "./roadmap-modernization.test";
 
 async function main() {
   const collector = new TestCollector();
   const overallStart = Date.now();
 
   console.log("======================================================================");
-  console.log("🌸 LIMITLESS SWEET — 4-TIER E2E REQUIREMENT VERIFICATION SUITE");
+  console.log("🌸 LIMITLESS SWEET — E2E REQUIREMENT & UI/UX MODERNIZATION SUITE");
   console.log("   Framework: Next.js 15 App Router | React 18 | Tailwind CSS");
   console.log(`   Execution Started: ${new Date().toISOString()}`);
   console.log("======================================================================\n");
@@ -43,6 +44,11 @@ async function main() {
   await runTier4Tests(collector);
   console.log("");
 
+  // Tier 5: Roadmap UI/UX Modernization
+  console.log("▶ Running Roadmap UI/UX Modernization (Scrollspy, Parallax, Petals, Tilt, Scrollytelling)...");
+  await runRoadmapModernizationTests(collector);
+  console.log("");
+
   const overallDuration = Date.now() - overallStart;
   const overall = collector.getOverallSummary();
 
@@ -50,6 +56,7 @@ async function main() {
   const tier2 = collector.getTierSummary("Tier 2: Boundary & Corner Cases");
   const tier3 = collector.getTierSummary("Tier 3: Cross-Feature Combinations");
   const tier4 = collector.getTierSummary("Tier 4: Real-World User Scenarios");
+  const tier5 = collector.getTierSummary("Roadmap UI/UX Modernization");
 
   console.log("======================================================================");
   console.log("                  VERIFICATION SUITE SUMMARY RESULTS                   ");
@@ -69,6 +76,7 @@ async function main() {
   formatSummaryLine(tier2);
   formatSummaryLine(tier3);
   formatSummaryLine(tier4);
+  formatSummaryLine(tier5);
 
   console.log("----------------------------------------------------------------------");
   const successRate = overall.total > 0 ? ((overall.passed / overall.total) * 100).toFixed(1) : "0.0";

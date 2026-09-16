@@ -68,6 +68,31 @@ export const Navbar: React.FC = () => {
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+
+    setTimeout(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        const navbarHeight = 68;
+        const targetTop =
+          target.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: "smooth",
+        });
+        window.history.pushState(null, "", href);
+      } else {
+        window.location.hash = href;
+      }
+    }, 60);
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -80,6 +105,10 @@ export const Navbar: React.FC = () => {
         {/* Logo */}
         <Link
           href="#"
+          onClick={() => {
+            setIsMobileMenuOpen(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           className="flex items-center gap-1 text-2xl font-bold font-heading tracking-tight focus-visible:ring-2 focus-visible:ring-mustard rounded-lg"
           aria-label="Limitless Sweet - Inicio"
         >
@@ -160,7 +189,7 @@ export const Navbar: React.FC = () => {
                   <a
                     key={link.href}
                     href={link.href}
-                    onClick={closeMobileMenu}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className={`block py-2.5 px-3 rounded-lg text-base font-medium transition-colors ${
                       isActive
                         ? "text-mustard font-semibold bg-yellow-light/20"
@@ -175,7 +204,7 @@ export const Navbar: React.FC = () => {
               <div className="pt-3">
                 <a
                   href="#menu"
-                  onClick={closeMobileMenu}
+                  onClick={(e) => handleNavClick(e, "#menu")}
                   className="w-full inline-flex items-center justify-center px-5 py-3 rounded-button bg-mustard hover:bg-mustard-hover text-white font-medium text-base shadow-sm"
                 >
                   Ver menú

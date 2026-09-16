@@ -185,7 +185,7 @@ export const ContactReservation: React.FC<ContactReservationProps> = ({
   return (
     <section
       id="reserva"
-      className="py-16 sm:py-20 lg:py-24 bg-cream-soft relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 bg-cream-soft scroll-mt-20 relative overflow-hidden"
       aria-label="Reserva de mesas y contacto"
     >
       {/* Decorative ambient elements */}
